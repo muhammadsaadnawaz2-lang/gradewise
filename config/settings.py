@@ -15,6 +15,10 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <--- Yeh line add karein
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    # ... baki middleware
 ]
 ROOT_URLCONF = "config.urls"
 TEMPLATES = [{
@@ -36,6 +40,9 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
 USE_TZ = True
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
