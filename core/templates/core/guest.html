@@ -1,0 +1,263 @@
+{% extends 'core/base.html' %}
+{% block title %}GradeWise - Smart GPA Tracker & Grade Predictor (4.5 Scale){% endblock %}
+{% block head %}<meta name="description" content="GradeWise tracks your cumulative GPA on the 4.5 scale, predicts your course grades with relative or absolute grading, and plans the grades you need to reach your target CGPA."><noscript><style>.reveal{opacity:1;transform:none}</style></noscript>{% endblock %}
+{% block content %}
+<main class="flex-1">
+
+<!-- ================= HERO ================= -->
+<section class="relative overflow-hidden">
+ <div class="absolute inset-0 grid-bg pointer-events-none"></div>
+ <div class="blob w-[36rem] h-[36rem] -right-48 -top-32" style="background:rgb(var(--blob-a))"></div>
+ <div class="blob w-[30rem] h-[30rem] -left-48 top-1/2" style="background:rgb(var(--blob-b));animation-delay:-7s"></div>
+ <div class="relative max-w-[1280px] mx-auto px-5 sm:px-8 pt-16 pb-24 lg:pt-24 lg:pb-28 grid lg:grid-cols-12 gap-14 items-center">
+  <div class="lg:col-span-6 space-y-8">
+   <a href="#features" class="eyebrow"><span class="pulse-dot"></span>New: Goal planner &amp; retake simulator</a>
+   <h1 class="text-[2.75rem] sm:text-6xl xl:text-[4rem] font-extrabold tracking-tight leading-[1.02] text-ink">Know your GPA.<br>Plan your grades.<br><span class="gradient-text">Graduate with confidence.</span></h1>
+   <p class="text-lg text-slate-300 max-w-xl leading-relaxed">GradeWise tracks your cumulative GPA across every semester, predicts your course grades before the results come out, and shows exactly what you need to reach your target.</p>
+   <div class="flex flex-col sm:flex-row gap-3">
+    <a href="{% url 'signup' %}" class="btn btn-primary px-8 py-4 text-[15px]">Create free account <i class="fa-solid fa-arrow-right text-xs"></i></a>
+    <a href="#calculator" class="btn btn-secondary px-8 py-4 text-[15px]"><i class="fa-solid fa-calculator text-xs text-brand-text"></i>Try the calculator</a>
+   </div>
+   <div class="flex flex-wrap gap-x-7 gap-y-2 text-[13px] text-slate-400 font-semibold">
+    <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i>Free to use</span><span><i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i>No account needed to try</span><span><i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i>Your own grading rules</span>
+   </div>
+  </div>
+
+  <!-- app window -->
+  <div class="lg:col-span-6 relative">
+   <div class="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-tr from-indigo-500/20 via-violet-500/15 to-fuchsia-500/20 blur-2xl"></div>
+   <div class="chip absolute -left-4 sm:-left-10 top-[19.5rem] z-20 floaty text-emerald-400"><i class="fa-solid fa-arrow-trend-up"></i>+0.06 vs last semester</div>
+   <div class="chip absolute -right-2 sm:-right-6 bottom-24 z-20 floaty text-amber-400" style="animation-delay:-3s"><i class="fa-solid fa-user-check"></i>Attendance safe: 2 of 30 absent</div>
+   <div class="app-window relative">
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-line">
+     <div class="flex gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-400/80"></span><span class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></span><span class="w-2.5 h-2.5 rounded-full bg-emerald-400/80"></span></div>
+     <span class="text-[11px] font-bold text-slate-400">GradeWise &middot; Dashboard</span><span class="text-[10px] font-bold text-slate-500">Sample data</span>
+    </div>
+    <div class="p-5 space-y-4">
+     <div class="grid grid-cols-3 gap-3">
+      <div class="rounded-2xl border border-line bg-surface2 p-3.5"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">CGPA</p><p class="text-2xl font-extrabold text-ink mt-1"><span data-count="4.12" data-dec="2">4.12</span></p></div>
+      <div class="rounded-2xl border border-line bg-surface2 p-3.5"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Credits</p><p class="text-2xl font-extrabold text-ink mt-1"><span data-count="93">93</span><span class="text-xs text-slate-500 font-bold"> / 120</span></p></div>
+      <div class="rounded-2xl border border-line bg-surface2 p-3.5"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Est. rank</p><p class="text-2xl font-extrabold text-emerald-400 mt-1">Top 5%</p></div>
+     </div>
+     <div class="rounded-2xl border border-line bg-surface2 p-4">
+      <div class="flex justify-between items-center mb-2"><span class="text-xs font-extrabold text-ink">Cumulative GPA</span><span class="text-[10px] font-bold text-brand-text bg-brand/10 px-2 py-0.5 rounded-full">Target 4.30</span></div>
+      <svg viewBox="0 0 320 110" class="w-full h-28"><defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b5cf6" stop-opacity=".35"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient><linearGradient id="hl" x1="0" x2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#d946ef"/></linearGradient></defs>
+       <line x1="0" y1="26" x2="320" y2="26" stroke="currentColor" class="text-slate-500" stroke-opacity=".5" stroke-dasharray="4 5"/>
+       <path d="M0 88 C40 80 60 70 90 66 S150 52 180 46 250 34 320 24 L320 110 L0 110Z" fill="url(#hg)"/><path d="M0 88 C40 80 60 70 90 66 S150 52 180 46 250 34 320 24" fill="none" stroke="url(#hl)" stroke-width="3.5" stroke-linecap="round"/>
+       <g fill="rgb(var(--surface))" stroke="#8b5cf6" stroke-width="2.5"><circle cx="90" cy="66" r="5"/><circle cx="180" cy="46" r="5"/><circle cx="250" cy="34" r="5"/><circle cx="320" cy="24" r="5"/></g></svg>
+      <div class="flex justify-between text-[10px] font-bold text-slate-500 mt-1 px-1"><span>Sem 1</span><span>Sem 3</span><span>Sem 5</span><span>Sem 6</span></div>
+     </div>
+     <div class="grid grid-cols-2 gap-3">
+      <div class="rounded-2xl border border-line bg-surface2 p-3.5 flex items-center justify-between"><div><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">This semester</p><p class="text-xl font-extrabold text-ink mt-0.5">4.25</p></div><span class="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-lg font-extrabold">A0</span></div>
+      <div class="rounded-2xl border border-line bg-surface2 p-3.5"><div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400"><span>Magna Cum Laude</span><span class="text-amber-400">92%</span></div><div class="h-2 rounded-full bg-n800 mt-3 overflow-hidden" style="background:rgb(var(--n800))"><div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-fuchsia-500" style="width:92%"></div></div><p class="text-[10px] text-slate-500 mt-2 font-semibold">Need +0.08 for Summa</p></div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<section class="border-y border-line bg-surface/60 overflow-hidden py-5" aria-hidden="true">
+ <div class="marquee gap-3">
+  {% for rep in "12" %}<div class="flex gap-3 pr-3">{% for m in marquee %}<span class="chip px-4 py-2 text-[12px] text-slate-300"><i class="fa-solid fa-star text-brand-text text-[9px]"></i>{{ m }}</span>{% endfor %}</div>{% endfor %}
+ </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section class="max-w-[1280px] mx-auto px-5 sm:px-8 py-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+ {% for n,l in stats %}<div class="reveal"><div class="text-5xl font-extrabold gradient-text" data-count="{{ n }}">{{ n }}</div><div class="text-xs text-slate-400 font-bold mt-2 uppercase tracking-wider">{{ l }}</div></div>{% endfor %}
+</section>
+
+<!-- ================= BENTO FEATURES ================= -->
+<section id="features" class="max-w-[1280px] mx-auto w-full px-5 sm:px-8 py-16 space-y-12 scroll-mt-20">
+ <div class="text-center max-w-2xl mx-auto space-y-4 reveal"><span class="eyebrow">Features</span><h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink">Everything you need to stay on top of your grades</h2><p class="text-slate-400 text-lg">From your first semester to graduation, GradeWise turns your marks into clear answers.</p></div>
+ <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+  <!-- tracking -->
+  <div class="tile glass-card lg:col-span-7 reveal">
+   <div class="flex items-start justify-between gap-4"><div class="space-y-2 max-w-sm"><div class="w-11 h-11 rounded-2xl bg-brand/10 text-brand-text flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></div><h3 class="text-xl font-extrabold text-ink">Real CGPA tracking</h3><p class="text-sm text-slate-400 leading-relaxed">Enter your semesters once and GradeWise keeps your cumulative GPA up to date on the 4.5 scale, with a full semester history.</p></div>
+    <div class="text-right"><p class="text-5xl font-extrabold gradient-text">4.12</p><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">of 4.5</p></div></div>
+   <div class="mt-6 grid grid-cols-4 gap-2.5 text-center">
+    {% for s,g in history %}<div class="rounded-2xl border border-line bg-surface2 py-3"><p class="text-[10px] font-bold text-slate-400">{{ s }}</p><p class="text-base font-extrabold text-ink">{{ g }}</p></div>{% endfor %}
+   </div>
+  </div>
+  <!-- predictor -->
+  <div class="tile glass-card lg:col-span-5 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-bullseye"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">Course grade predictor</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">Weighted components and what-if marks for the final exam.</p>
+   <div class="mt-5 space-y-2">{% for n,w in preview_mini %}<div class="flex items-center gap-3 text-xs font-bold"><span class="w-24 text-slate-300">{{ n }}</span><div class="flex-1 h-2 rounded-full overflow-hidden" style="background:rgb(var(--n800))"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500" style="width:{{ w }}%"></div></div><span class="w-8 text-right text-slate-400">{{ w }}%</span></div>{% endfor %}</div>
+  </div>
+  <!-- goal -->
+  <div class="tile glass-card lg:col-span-4 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-flag-checkered"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">Goal planner</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">See the average GPA you need in your remaining credits.</p>
+   <div class="mt-5 rounded-2xl border border-line bg-surface2 p-4"><div class="flex justify-between text-[11px] font-bold text-slate-400"><span>Now 3.78</span><span class="text-brand-text">Target 4.20</span></div><div class="relative h-2.5 rounded-full mt-3" style="background:rgb(var(--n800))"><div class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500" style="width:68%"></div><div class="absolute -top-1 w-4 h-4 rounded-full bg-surface border-2 border-fuchsia-500" style="left:calc(68% - 8px)"></div></div><p class="text-xs font-bold text-ink mt-3">Need <span class="text-brand-text">4.32</span> average in the remaining 93 credits</p></div>
+  </div>
+  <!-- retake -->
+  <div class="tile glass-card lg:col-span-4 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-rotate-left"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">Retake simulator</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">Test how retaking a course would change your CGPA.</p>
+   <div class="mt-5 flex items-center justify-between rounded-2xl border border-line bg-surface2 p-4"><div class="text-center"><p class="text-[10px] font-bold uppercase text-slate-400">Course</p><p class="text-2xl font-extrabold text-ink">B0</p></div><i class="fa-solid fa-arrow-right text-brand-text"></i><div class="text-center"><p class="text-[10px] font-bold uppercase text-slate-400">Retake</p><p class="text-2xl font-extrabold text-emerald-400">B+</p></div><div class="text-center border-l border-line pl-4"><p class="text-[10px] font-bold uppercase text-slate-400">CGPA</p><p class="text-lg font-extrabold text-ink">3.78 <span class="text-emerald-400">&rarr; 3.83</span></p></div></div>
+  </div>
+  <!-- attendance -->
+  <div class="tile glass-card lg:col-span-4 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center"><i class="fa-solid fa-user-check"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">Attendance guard</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">Warnings before absences turn into an automatic F.</p>
+   <div class="mt-5 rounded-2xl border border-line bg-surface2 p-4"><div class="relative h-2.5 rounded-full" style="background:rgb(var(--n800))"><div class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-emerald-400 to-amber-400" style="width:23%"></div><div class="absolute -top-1.5 -bottom-1.5 w-0.5 bg-red-400" style="left:33.3%"></div></div><div class="flex justify-between text-[11px] font-bold mt-2.5"><span class="text-slate-400">7 of 30 absent</span><span class="text-red-400">F at 10 (1/3)</span></div></div>
+  </div>
+  <!-- converter -->
+  <div class="tile glass-card lg:col-span-4 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-right-left"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">GPA scale converter</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">Switch between scales in one click.</p>
+   <div class="mt-5 flex flex-wrap gap-2">{% for s in scales %}<span class="chip {% if forloop.first %}text-brand-text border-brand/40 bg-brand/10{% else %}text-slate-300{% endif %}">{{ s }}</span>{% endfor %}</div>
+   <div class="mt-4 rounded-2xl border border-line bg-surface2 px-4 py-3 flex items-center justify-between text-xs font-bold"><span class="text-slate-400">3.75 on 4.5 scale</span><span class="text-ink">= 83.3% &middot; <span class="text-emerald-400">A0</span></span></div>
+  </div>
+  <!-- honors -->
+  <div class="tile glass-card lg:col-span-4 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-crown"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">Honors progress</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">Track your path to Cum Laude, Magna and Summa.</p>
+   <div class="mt-5 grid grid-cols-3 gap-2 text-center text-[10px] font-extrabold">
+    <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 py-3">Cum<br>Laude</div><div class="rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-400 py-3">Magna<br>Cum Laude</div><div class="rounded-xl border border-line bg-surface2 text-slate-500 py-3">Summa<br>Cum Laude</div>
+   </div>
+   <div class="mt-4 rounded-2xl border border-line bg-surface2 px-4 py-3"><div class="flex justify-between text-[11px] font-bold text-slate-400"><span>Progress to your target</span><span class="text-amber-400">92%</span></div><div class="h-2 rounded-full mt-2 overflow-hidden" style="background:rgb(var(--n800))"><div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-fuchsia-500" style="width:92%"></div></div></div>
+  </div>
+  <!-- grants -->
+  <div class="tile glass-card lg:col-span-4 reveal">
+   <div class="w-11 h-11 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-graduation-cap"></i></div>
+   <h3 class="text-xl font-extrabold text-ink mt-3">Scholarships &amp; careers</h3><p class="text-sm text-slate-400 mt-1 leading-relaxed">See what your CGPA unlocks.</p>
+   <div class="mt-5 space-y-2 text-xs font-bold">
+    <div class="flex justify-between items-center rounded-xl border border-line bg-surface2 px-3.5 py-2.5"><span class="text-ink">Merit scholarship</span><span class="text-emerald-400"><i class="fa-solid fa-check mr-1"></i>Eligible</span></div>
+    <div class="flex justify-between items-center rounded-xl border border-line bg-surface2 px-3.5 py-2.5"><span class="text-ink">Data Scientist path</span><span class="text-emerald-400"><i class="fa-solid fa-check mr-1"></i>Qualified</span></div>
+    <div class="flex justify-between items-center rounded-xl border border-line bg-surface2 px-3.5 py-2.5"><span class="text-ink">Quant Analyst path</span><span class="text-amber-400">+0.18 needed</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= LIVE PREDICTOR ================= -->
+<section class="border-y border-line bg-surface/50">
+ <div class="max-w-[1280px] mx-auto px-5 sm:px-8 py-24 grid lg:grid-cols-2 gap-14 items-center">
+  <div class="space-y-6 reveal">
+   <span class="eyebrow">Course Grade Predictor</span>
+   <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink leading-[1.05]">Know your final grade <span class="gradient-text">before the exam</span></h2>
+   <p class="text-slate-400 text-lg leading-relaxed">Enter the marks you already have and the grade you expect on the rest. GradeWise follows the way universities really grade.</p>
+   <ul class="space-y-4 text-[15px] text-slate-300">
+    <li class="flex gap-4"><span class="w-9 h-9 rounded-xl bg-brand/10 text-brand-text flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-scale-balanced"></i></span><span><strong class="text-ink">Relative or absolute grading.</strong> Tell us how your professor grades and we do the rest.</span></li>
+    <li class="flex gap-4"><span class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-users"></i></span><span><strong class="text-ink">Class ranking aware.</strong> Add your class size and rank to see your grade band.</span></li>
+    <li class="flex gap-4"><span class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-sliders"></i></span><span><strong class="text-ink">Fully editable.</strong> Change weights and grade cut-offs to match your syllabus.</span></li>
+   </ul>
+  </div>
+  <div class="app-window p-6 space-y-5 reveal">
+   <div class="flex items-center justify-between"><span class="text-[11px] font-extrabold uppercase tracking-[.14em] text-slate-400">Try it: drag the final exam score</span><span class="text-[10px] font-bold text-slate-500">Sample data</span></div>
+   {% for n,w,s in preview %}<div class="grid grid-cols-12 gap-2 items-center rounded-2xl border border-line bg-surface2 px-4 py-3 text-xs"><div class="col-span-7 font-bold text-ink">{{ n }}</div><div class="col-span-2 text-slate-400 font-semibold">{{ w }}%</div><div class="col-span-3 text-right font-extrabold {% if s == 'Pending' %}text-brand-text{% else %}text-emerald-400{% endif %}">{% if s == 'Pending' %}<span id="wf-val">80</span>{% else %}{{ s }}{% endif %}</div></div>{% endfor %}
+   <input id="whatif" type="range" min="0" max="100" value="80" class="w-full h-2 rounded-full appearance-none cursor-pointer" style="accent-color:rgb(var(--brand));background:rgb(var(--n800))" aria-label="Final exam score">
+   <div class="flex items-center justify-between rounded-2xl border border-line bg-surface2 p-4"><div><p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Projected score</p><p class="text-4xl font-extrabold text-ink" id="wf-score">89.0</p><p class="text-[11px] font-bold text-slate-400 mt-1" id="wf-need"></p></div><div class="text-center"><div id="wf-grade" class="px-6 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-4xl font-extrabold">A0</div><p class="text-[10px] font-bold text-slate-400 mt-1.5"><span id="wf-pts">4.0</span> / 4.5 pts</p></div></div>
+   <div class="rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold px-4 py-3"><strong>Are you sure?</strong> If your attendance is low but your marks are high, GradeWise asks you to double-check.</div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= CALCULATOR ================= -->
+<section id="calculator" class="max-w-[1280px] mx-auto w-full px-5 sm:px-8 py-24 space-y-10 scroll-mt-20">
+ <div class="text-center max-w-2xl mx-auto space-y-4 reveal"><span class="eyebrow">Try it now</span><h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink">Calculate your GPA in seconds</h2><p class="text-slate-400 text-lg">No signup needed. Add your courses, pick the grades and see your GPA on the 4.5 scale.</p></div>
+ <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal">
+  <div class="lg:col-span-7 glass-card rounded-[2rem] p-6 sm:p-8 space-y-5 shadow-lift">
+   <div class="flex justify-between items-center border-b border-line pb-4">
+    <div><h3 class="text-xl font-extrabold text-ink flex items-center gap-2"><i class="fa-solid fa-calculator text-brand-text"></i>Quick GPA Calculator</h3><p class="text-xs text-slate-400 mt-0.5">Instant calculation without signup</p></div>
+    <span class="eyebrow">Guest mode</span>
+   </div>
+   <div class="grid grid-cols-12 gap-2 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 px-1"><div class="col-span-5">Course Title</div><div class="col-span-4">Grade</div><div class="col-span-3">Credits</div></div>
+   <div id="guest-course-container" class="space-y-2.5"></div>
+   <div class="grid grid-cols-2 gap-3 pt-1">
+    <button onclick="calc.add()" class="btn btn-secondary py-3 text-xs"><i class="fa-solid fa-plus text-[10px]"></i>Add course</button>
+    <button onclick="calc.calc()" class="btn btn-primary py-3 text-xs">Calculate</button>
+   </div>
+   <div class="rounded-2xl border border-line bg-surface2 p-5 flex justify-between items-center">
+    <div><div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Estimated GPA (4.5 scale)</div><div class="text-5xl font-extrabold gradient-text" id="guest-res-cgpa">0.00</div></div>
+    <div class="text-right space-y-1 text-xs"><div class="text-slate-400 font-semibold">Total credits: <span class="font-extrabold text-ink" id="guest-res-credits">0</span></div>
+    <div class="text-slate-400 font-semibold">Earned points: <span class="font-extrabold text-brand-text" id="guest-res-points">0</span></div></div>
+   </div>
+  </div>
+  <div class="lg:col-span-5 rounded-[2rem] brand-panel p-8 space-y-5 h-fit relative overflow-hidden">
+   <div class="blob w-64 h-64 -right-20 -top-20 bg-fuchsia-300"></div>
+   <h3 class="relative text-sm font-extrabold uppercase tracking-[.14em] on-brand">With a free account</h3>
+   <ul class="relative space-y-3.5 text-sm on-brand-dim">
+    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check on-brand mt-0.5"></i><span><strong class="on-brand">Cumulative GPA</strong> across every semester, saved to your account</span></li>
+    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check on-brand mt-0.5"></i><span><strong class="on-brand">Course grade predictor</strong> with relative and absolute grading</span></li>
+    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check on-brand mt-0.5"></i><span><strong class="on-brand">Goal planner</strong> and retake simulator</span></li>
+    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check on-brand mt-0.5"></i><span><strong class="on-brand">Honors progress</strong> and scholarship eligibility</span></li>
+   </ul>
+   <a href="{% url 'signup' %}" class="relative btn w-full py-3.5 text-sm bg-white text-indigo-700 shadow-lg hover:shadow-xl">Create free account</a>
+  </div>
+ </div>
+</section>
+
+<!-- ================= HOW ================= -->
+<section id="how" class="border-y border-line bg-surface/50 scroll-mt-20">
+ <div class="max-w-[1280px] mx-auto px-5 sm:px-8 py-24 space-y-14">
+  <div class="text-center max-w-2xl mx-auto space-y-4 reveal"><span class="eyebrow">How it works</span><h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink">Set up in three simple steps</h2></div>
+  <div class="grid md:grid-cols-3 gap-6 relative">
+   <div class="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"></div>
+   {% for n,t,d in steps %}<div class="glass-card rounded-[1.75rem] p-8 space-y-3 reveal relative"><span class="inline-flex w-12 h-12 rounded-2xl btn-primary items-center justify-center text-lg font-extrabold">{{ n }}</span><h3 class="text-xl font-extrabold text-ink">{{ t }}</h3><p class="text-sm text-slate-400 leading-relaxed">{{ d }}</p></div>{% endfor %}
+  </div>
+ </div>
+</section>
+
+<!-- ================= SCALE ================= -->
+<section id="scale" class="max-w-[1280px] mx-auto w-full px-5 sm:px-8 py-24 scroll-mt-20">
+ <div class="grid lg:grid-cols-2 gap-14 items-center">
+  <div class="space-y-5 reveal">
+   <span class="eyebrow">Grade scale</span>
+   <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink leading-[1.05]">Designed around the <span class="gradient-text">4.5 scale</span></h2>
+   <p class="text-slate-400 text-lg leading-relaxed">Most GPA tools assume a 4.0 scale and give you the wrong number. GradeWise uses the 4.5 scale by default, and its converter handles 4.0, 5.0, 100-point and 7.0 scales too.</p>
+   <div class="glass-card rounded-2xl p-5 space-y-3"><p class="text-sm font-extrabold text-ink">Relative grading, at a glance</p>
+    <div class="flex h-9 rounded-xl overflow-hidden text-[11px] font-extrabold text-center"><div class="flex-[30] bg-emerald-500/20 text-emerald-400 flex items-center justify-center">A band 30%</div><div class="flex-[40] bg-indigo-500/20 text-indigo-400 flex items-center justify-center">B band 40%</div><div class="flex-[30] bg-amber-500/20 text-amber-400 flex items-center justify-center">C-D 30%</div></div>
+    <p class="text-xs text-slate-400">The A band (A+ and A0) goes to at most 30% of the class, the B band to the next 40%, and everyone else gets C or lower.</p></div>
+  </div>
+  <div class="glass-card rounded-[2rem] p-4 sm:p-6 reveal"><div class="grid grid-cols-3 gap-3 text-center">
+   {% for g,p,c in scale %}<div class="rounded-2xl bg-{{ c }}-500/10 border border-{{ c }}-500/25 py-5 hover:scale-105 transition"><div class="text-2xl font-extrabold text-{{ c }}-400">{{ g }}</div><div class="text-xs font-bold text-slate-400 mt-0.5">{{ p }} pts</div></div>{% endfor %}
+  </div></div>
+ </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="border-t border-line bg-surface/50 scroll-mt-20">
+ <div class="max-w-3xl mx-auto px-5 sm:px-8 py-24 space-y-10">
+  <div class="text-center space-y-4 reveal"><span class="eyebrow">FAQ</span><h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink">Frequently asked questions</h2></div>
+  <div class="space-y-3 reveal">
+   {% for q,a in faq %}<details class="glass-card rounded-2xl px-6 py-5"><summary class="flex items-center justify-between gap-4 text-[15px] font-extrabold text-ink">{{ q }}<i class="fa-solid fa-chevron-down chev text-xs text-slate-400 transition"></i></summary><p class="text-sm text-slate-400 leading-relaxed mt-3">{{ a }}</p></details>{% endfor %}
+  </div>
+ </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="max-w-[1280px] mx-auto w-full px-5 sm:px-8 py-24">
+ <div class="relative overflow-hidden rounded-[2.5rem] brand-panel p-10 sm:p-16 text-center space-y-6 reveal">
+  <div class="absolute inset-0 grid-bg opacity-30 pointer-events-none" style="--ink:255 255 255"></div>
+  <div class="blob w-80 h-80 -right-16 -top-20 bg-fuchsia-300"></div><div class="blob w-80 h-80 -left-16 -bottom-24 bg-sky-300" style="animation-delay:-9s"></div>
+  <h2 class="relative text-4xl sm:text-5xl font-extrabold tracking-tight on-brand">Ready to take control of your GPA?</h2>
+  <p class="relative on-brand-dim text-lg max-w-xl mx-auto">Create your free account and see your real cumulative GPA, your grade predictions and your path to graduation in minutes.</p>
+  <div class="relative flex flex-col sm:flex-row gap-3 justify-center"><a href="{% url 'signup' %}" class="btn px-9 py-4 text-[15px] bg-white text-indigo-700 shadow-xl hover:shadow-2xl">Get started free <i class="fa-solid fa-arrow-right text-xs"></i></a><a href="{% url 'about' %}" class="btn px-9 py-4 text-[15px] glass-on-brand on-brand">Learn more about us</a></div>
+ </div>
+</section>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+const calc=Calculator("guest",[{id:1,name:"Intro to GPA",grade:"A0",credits:3},{id:2,name:"Calculus I",grade:"B+",credits:4},{id:3,name:"Physics 101",grade:"B0",credits:3}]);
+/* scroll reveal + count-up numbers */
+const run=el=>{const t=parseFloat(el.dataset.count),d=el.dataset.dec!==undefined?parseInt(el.dataset.dec):(el.dataset.count.split('.')[1]||'').length,s=performance.now();const f=n=>{const p=Math.min(1,(n-s)/1100),e=1-Math.pow(1-p,3);el.textContent=(t*e).toFixed(d);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)};
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");if(e.target.dataset.count)run(e.target);io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".reveal,[data-count]").forEach(el=>io.observe(el));
+/* live predictor demo */
+(function(){
+  const cuts=[[90,"A+",4.5],[85,"A0",4],[80,"B+",3.5],[75,"B0",3],[70,"C+",2.5],[65,"C0",2],[60,"D+",1.5],[40,"D0",1]],$=id=>document.getElementById(id),sl=$("whatif");
+  if(!sl)return;
+  const upd=()=>{const f=+sl.value,s=57+.4*f,g=cuts.find(c=>s>=c[0])||[0,"F",0];
+    $("wf-val").textContent=f;$("wf-score").textContent=s.toFixed(1);$("wf-grade").textContent=g[1];$("wf-pts").textContent=g[2].toFixed(1);
+    const need=(90-57)/.4;$("wf-need").textContent=s>=90?"You reached A+":`A+ needs ${need.toFixed(1)} on the final`;
+    const col=g[2]>=4?"emerald":g[2]>=3?"indigo":g[2]>=2?"amber":"red",b=$("wf-grade");b.className=`px-6 py-3 rounded-2xl bg-${col}-500/10 border border-${col}-500/30 text-${col}-400 text-4xl font-extrabold`};
+  sl.addEventListener("input",upd);upd();
+})();
+</script>
+{% endblock %}

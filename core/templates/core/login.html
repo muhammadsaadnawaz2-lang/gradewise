@@ -1,0 +1,15 @@
+{% extends 'core/auth_base.html' %}
+{% block title %}Login - GradeWise{% endblock %}
+{% block hero %}Welcome back, <span class="text-[#fde68a]">Scholar.</span>{% endblock %}
+{% block form_body %}
+<div class="space-y-1"><h1 class="text-2xl font-extrabold tracking-tight text-ink">Log in</h1><p class="text-xs text-slate-400">Access your saved GPAs and trajectory planner</p></div>
+<form method="post" class="space-y-4">{% csrf_token %}
+ {% if form.non_field_errors %}<div class="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold">{{ form.non_field_errors.0 }}</div>{% endif %}
+ <div><label class="block text-xs font-bold text-slate-300 mb-1.5">Username</label>{{ form.username }}{{ form.username.errors }}</div>
+ <div><label class="block text-xs font-bold text-slate-300 mb-1.5">Password</label>
+  <div class="relative">{{ form.password }}<button type="button" onclick="togglePw('{{ form.password.id_for_label }}',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"><i class="fa-solid fa-eye"></i></button></div>{{ form.password.errors }}</div>
+ <input type="hidden" name="next" value="{{ next }}">
+ <button type="submit" class="btn btn-primary w-full py-3.5 text-sm">Continue to Dashboard</button>
+</form>
+<p class="text-center text-xs text-slate-400">New here? <a href="{% url 'signup' %}" class="font-black text-brand-text hover:underline">Create a free account</a></p>
+{% endblock %}

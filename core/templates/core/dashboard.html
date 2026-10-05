@@ -1,0 +1,221 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeWise Dashboard</title>
+{% include 'core/_head.html' %}
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="text-ink min-h-screen flex flex-col antialiased">
+
+<header class="h-16 border-b border-brand-border bg-bg/75 backdrop-blur-xl px-4 md:px-6 flex items-center justify-between sticky top-0 z-50">
+ <div class="flex items-center space-x-3">
+  <img src="{% static 'core/img/logo.svg' %}" alt="GradeWise logo" class="w-10 h-10 rounded-xl shadow-lg shadow-emerald-500/20">
+  <div>
+   <h1 class="font-bold text-lg tracking-wider text-white flex items-center gap-2"><span>Grade<span class="gradient-text">Wise</span></span> <span class="hidden sm:inline-block text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-brand/10 text-brand-text border border-brand/25">PRO</span></h1>
+   <p class="text-xs text-gray-400 hidden sm:block">Smart GPA tracking & grade prediction</p>
+  </div>
+ </div>
+ <div class="flex items-center space-x-3">
+  <div class="relative hidden md:block">
+   <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+   <input id="search" type="text" placeholder="Search & press Enter (grants, career, peers...)" class="bg-surface2 border border-brand-border rounded-full pl-9 pr-4 py-1.5 text-xs focus:outline-none focus:border-brand-accent w-72 transition-all">
+  </div>
+  {% include 'core/_themetoggle.html' %}
+  <button onclick="toast('No new notifications')" class="p-2 rounded-lg bg-brand-border/40 hover:bg-brand-border text-gray-300 transition-colors"><i data-lucide="bell" class="w-4 h-4"></i></button>
+  <div class="flex items-center space-x-3 border-l border-brand-border pl-3">
+   <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold text-[#fff] border border-white/20">{{ user.username|slice:":2"|upper }}</div>
+   <div class="hidden md:block"><p class="text-xs font-medium text-white leading-tight">{{ user.username }}</p><p class="text-[10px] text-gray-400">{{ profile.get_degree_display }} · Semester {{ profile.current_semester }}</p></div>
+   <a href="{% url 'settings' %}" class="p-2 rounded-lg bg-brand-border/40 hover:bg-brand-border text-gray-300 transition-colors" title="Settings"><i data-lucide="settings" class="w-4 h-4"></i></a>
+   <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+    <button class="p-2 rounded-lg bg-brand-border/40 hover:bg-red-500/20 hover:text-red-400 text-gray-300 transition-colors" title="Logout"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+   </form>
+  </div>
+ </div>
+</header>
+
+<!-- mobile nav -->
+<nav id="mobNav" class="lg:hidden flex gap-2 overflow-x-auto px-4 py-2 border-b border-brand-border bg-brand-card/60"></nav>
+
+<div class="flex-1 flex">
+ <aside class="w-64 border-r border-brand-border bg-brand-card flex-shrink-0 hidden lg:flex flex-col justify-between p-4 sticky top-16 h-[calc(100vh-4rem)]">
+  <div class="space-y-6">
+   <div><p class="text-[10px] font-semibold text-gray-500 tracking-wider uppercase mb-3 px-3">Main Navigation</p><nav id="sideNav" class="space-y-1"></nav></div>
+   <div><p class="text-[10px] font-semibold text-gray-500 tracking-wider uppercase mb-3 px-3">Quick Tools</p>
+    <nav class="space-y-1">
+     <button onclick="show('calculators');document.getElementById('cvInput').focus()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-brand-border/30 transition-all"><span class="flex items-center space-x-3"><i data-lucide="refresh-cw" class="w-4 h-4"></i><span>GPA Converter</span></span><i data-lucide="chevron-right" class="w-3 h-3 text-gray-600"></i></button>
+     <button onclick="show('scholarships')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-brand-border/30 transition-all"><span class="flex items-center space-x-3"><i data-lucide="dollar-sign" class="w-4 h-4"></i><span>Grant Eligibility</span></span><i data-lucide="chevron-right" class="w-3 h-3 text-gray-600"></i></button>
+    </nav></div>
+  </div>
+  <div class="bg-gradient-to-br from-brand/10 to-fuchsia-500/10 p-4 rounded-xl border border-brand-border/60">
+   <div class="flex items-center space-x-3 mb-2">
+    <div class="w-8 h-8 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center border border-yellow-500/30"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+    <div><h4 class="text-xs font-bold text-white" id="hbTitle">-</h4><p class="text-[10px] text-amber-400 font-medium">Path to Honors Badge</p></div>
+   </div>
+   <p class="text-[11px] text-gray-400 mb-3" id="hbText"></p>
+   <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden"><div id="hbBar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-1.5 rounded-full transition-all duration-500" style="width:0"></div></div>
+  </div>
+ </aside>
+
+ <main class="flex-1 min-w-0 p-4 md:p-6">
+
+  <!-- DASHBOARD -->
+  <section data-section="dashboard" class="hidden space-y-6">
+   <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+   <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div class="xl:col-span-2 bg-brand-card p-5 rounded-2xl border border-brand-border space-y-4">
+     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border/60 pb-4">
+      <div><h2 class="font-bold text-base text-white flex items-center gap-2"><i data-lucide="line-chart" class="w-4 h-4 text-brand-accent"></i>Predictive Calculator & Semester Timeline</h2>
+      <p class="text-xs text-gray-400">Updates live as you change courses in the calculator</p></div>
+      <div id="flt" class="flex items-center space-x-1 bg-brand-dark p-1 rounded-xl border border-brand-border text-xs">
+       <button data-f="all" class="px-3 py-1 rounded-lg">All</button><button data-f="past" class="px-3 py-1 rounded-lg">Past</button><button data-f="proj" class="px-3 py-1 rounded-lg">Projected</button>
+      </div>
+     </div>
+     <div id="timeline" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+     <div class="h-64 relative w-full pt-2"><canvas id="gpaTrendChart"></canvas></div>
+    </div>
+    <div class="space-y-6">
+     <div id="quick" class="bg-brand-card p-5 rounded-2xl border border-brand-border"></div>
+     <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-4">
+      <div class="flex items-center justify-between border-b border-brand-border/60 pb-3"><h2 class="font-bold text-sm text-white flex items-center gap-2"><i data-lucide="award" class="w-4 h-4 text-emerald-400"></i>Scholarship Opportunities</h2>
+      <button onclick="show('scholarships')" class="text-[11px] text-brand-accent hover:underline">View all</button></div>
+      <div id="grantPreview" class="space-y-2.5"></div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- CALCULATORS -->
+  <section data-section="calculators" class="hidden space-y-6">
+   <div><h2 class="text-xl font-black text-white">My GPA & Calculators</h2><p class="text-xs text-gray-400">Calculate your semester GPA and convert between grading scales</p></div>
+   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-4">
+     <div class="border-b border-brand-border/60 pb-3 flex justify-between items-center">
+      <div><h2 class="font-bold text-base text-white flex items-center gap-2"><i data-lucide="calculator" class="w-4 h-4 text-brand-accent"></i>GPA Calculator</h2><p class="text-xs text-gray-400">Current semester courses</p></div>
+      <button onclick="resetCourses()" class="text-xs text-gray-400 hover:text-white transition-colors">Clear all</button>
+     </div>
+     <div id="courseContainer" class="space-y-3 max-h-80 overflow-y-auto pr-1"></div>
+     <button onclick="addCourse()" class="w-full py-2 border border-dashed border-brand-border hover:border-brand-accent rounded-xl text-xs text-gray-300 hover:text-brand-accent transition-all flex items-center justify-center gap-1.5 font-medium"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Add Course Row</button>
+     <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 space-y-3 text-center">
+      <p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">Calculated Semester GPA</p>
+      <div class="text-4xl font-black text-white" id="calcGpa">0.00</div>
+      <div class="flex justify-between items-center text-xs text-gray-400 pt-2 border-t border-brand-border/40">
+       <span>Credit Hours: <strong class="text-white" id="calcCr">0</strong></span><span>Grade Points: <strong class="text-white" id="calcPt">0</strong></span><span>New CGPA: <strong class="text-emerald-400" id="calcCg">0</strong></span>
+      </div>
+     </div>
+     <button onclick="saveCourses()" class="btn btn-primary w-full py-3 text-xs">Update & Save Calculation</button>
+    </div>
+    <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-5 h-fit">
+     <h3 class="font-bold text-base text-white flex items-center gap-2 border-b border-brand-border pb-3"><i data-lucide="refresh-cw" class="w-4 h-4 text-brand-teal"></i>Interactive GPA Scale Converter</h3>
+     <div class="space-y-4 text-xs">
+      <div><label class="text-gray-400 block mb-1">Input Scale</label>
+       <select id="cvScale" oninput="convert()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-teal"><option value="4.5">4.5 Scale (University)</option><option value="4">4.0 Scale (US)</option><option value="5">5.0 Scale (Weighted)</option><option value="100">100 Points (%)</option><option value="7">7.0 Scale</option></select></div>
+      <div><label class="text-gray-400 block mb-1">Grade Value</label><input type="number" id="cvInput" value="3.75" step="0.01" oninput="convert()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-teal"></div>
+      <div class="p-4 bg-brand-dark rounded-xl border border-brand-border space-y-2">
+       <div class="flex justify-between text-sm font-semibold"><span class="text-gray-300">Letter Grade</span><span id="cvLetter" class="text-brand-accent"></span></div>
+       <div class="flex justify-between text-sm font-semibold"><span class="text-gray-300">Percentage</span><span id="cvPct" class="text-white"></span></div>
+       <div class="flex justify-between text-sm font-semibold"><span class="text-gray-300">4.5 Normalized</span><span id="cvNorm" class="text-brand-blue"></span></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- GRADE PREDICTOR -->
+  <section data-section="predictor" class="hidden space-y-6">
+   <div><h2 class="text-xl font-black text-white">Course Grade Predictor</h2><p class="text-xs text-gray-400">Estimate your course score, grade and GPA points before the official results, based on your university's grading criteria</p></div>
+   <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-4">
+     <div class="border-b border-brand-border/60 pb-3"><h3 class="font-bold text-base text-white flex items-center gap-2"><i data-lucide="target" class="w-4 h-4 text-brand-accent"></i>Your Course</h3><p class="text-xs text-gray-400">Enter the marks you already have (0-100). Leave a field empty if that mark is still pending, such as the final exam.</p></div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+      <div><label class="text-gray-400 block mb-1">Course type</label>
+       <select id="pdType" onchange="pdRender()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-accent"><option value="academic">Academic Course</option><option value="mixed">Academic & Practical</option><option value="practical">Practical Course</option></select></div>
+      <div><label class="text-gray-400 block mb-1">Grading method</label>
+       <select id="pdMethod" onchange="pdCalc()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-accent"><option value="relative">Relative (class ranking)</option><option value="absolute">Absolute (my marks only)</option><option value="unsure">I'm not sure</option></select></div>
+     </div>
+     <div id="pdUnsure" class="hidden px-3 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-[11px]">Ask your professor (or check the syllabus): <strong>1)</strong> Is this course graded relative to the class or by fixed marks? <strong>2)</strong> What are the grade cut-offs? <strong>3)</strong> How are the components weighted? Both estimates are shown below until you know.</div>
+     <div id="pdRows" class="space-y-2.5"></div>
+     <p id="pdWeightWarn" class="hidden text-[11px] text-amber-400"></p>
+     <div class="grid grid-cols-2 gap-3 text-xs">
+      <div><label class="text-gray-400 block mb-1">Classes absent</label><input id="pdAbs" type="number" min="0" value="0" oninput="pdCalc()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2 text-white focus:outline-none focus:border-brand-accent"></div>
+      <div><label class="text-gray-400 block mb-1">Total classes</label><input id="pdTot" type="number" min="0" value="30" oninput="pdCalc()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2 text-white focus:outline-none focus:border-brand-accent"></div>
+     </div>
+     <div id="pdSure" class="space-y-2"></div>
+     <div id="pdClassBox" class="grid grid-cols-2 gap-3 text-xs">
+      <div><label class="text-gray-400 block mb-1">Students in your class</label><input id="pdN" type="number" min="1" placeholder="e.g. 40" oninput="pdCalc()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2 text-white focus:outline-none focus:border-brand-accent"></div>
+      <div><label class="text-gray-400 block mb-1">Your rank in class (optional)</label><input id="pdRank" type="number" min="1" placeholder="e.g. 8" oninput="pdCalc()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2 text-white focus:outline-none focus:border-brand-accent"></div>
+     </div>
+     <div id="pdWhatWrap" class="text-xs"><label class="text-gray-400 block mb-1">What-if: expected average score on the pending parts (0-100)</label><input id="pdWhat" type="number" min="0" max="100" value="80" oninput="pdCalc()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2 text-white focus:outline-none focus:border-brand-accent"></div>
+     <details class="text-xs bg-brand-dark rounded-xl border border-brand-border/60 p-3"><summary class="cursor-pointer text-gray-300 font-semibold">Absolute grade cut-offs (editable)</summary><div id="pdCuts" class="grid grid-cols-4 gap-2 mt-3"></div><p class="text-[10px] text-gray-500 mt-2">Cut-offs differ between professors. Change them to match your syllabus. They are also used to pick the letter inside your relative band.</p></details>
+    </div>
+    <div class="space-y-6">
+     <div id="pdResult" class="bg-brand-card p-5 rounded-2xl border border-brand-border"></div>
+     <div id="pdNeedCard" class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-3"><h3 class="font-bold text-sm text-white flex items-center gap-2"><i data-lucide="list-checks" class="w-4 h-4 text-brand-blue"></i>What do I need for each grade? (absolute)</h3><div id="pdNeed" class="space-y-1.5 text-xs"></div></div>
+     <div id="pdRankCard" class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-3"><h3 class="font-bold text-sm text-white flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-brand-purple"></i>Class ranking guide (relative)</h3><div id="pdRankGuide" class="space-y-1.5 text-xs"></div></div>
+     <div class="bg-brand-card p-4 rounded-2xl border border-brand-border text-[11px] text-gray-400 space-y-1.5"><p class="text-gray-300 font-semibold">Grading rules (4.5 scale)</p><p>A+ 4.5 · A0 4.0 · B+ 3.5 · B0 3.0 · C+ 2.5 · C0 2.0 · D+ 1.5 · D0 1.0 · F 0</p><p><strong class="text-gray-300">Relative:</strong> A band (A+/A0) goes to at most 30% of the class, B band (B+/B0) to the next 40%, everyone else gets C or lower.</p><p><strong class="text-gray-300">Absolute:</strong> your grade depends only on your own total marks (for example 90+ = A+ for everybody who reaches it).</p><p>A total below 40 = F. Missing 1/3 of the classes = F, whatever your marks are.</p></div>
+    </div>
+   </div>
+  </section>
+
+  <!-- GOAL PLANNER -->
+  <section data-section="planner" class="hidden space-y-6">
+   <div><h2 class="text-xl font-black text-white">Goal Planner & Retakes</h2><p class="text-xs text-gray-400">Plan the GPA you need for your target CGPA, test a course retake, and review your semester history (4.5 scale)</p></div>
+   <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-4">
+     <h3 class="font-bold text-base text-white flex items-center gap-2"><i data-lucide="flag" class="w-4 h-4 text-brand-accent"></i>Goal Planner</h3>
+     <p class="text-xs text-gray-400">What average GPA do you need in your remaining credits to finish with your target CGPA?</p>
+     <div class="grid grid-cols-2 gap-3 text-xs">
+      <div><label class="text-gray-400 block mb-1">Target CGPA</label><input id="plTarget" type="number" min="0" max="4.5" step="0.01" oninput="renderPlanner()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-accent"></div>
+      <div><label class="text-gray-400 block mb-1">Remaining credits (after this semester)</label><input id="plRem" type="number" min="0" placeholder="auto" oninput="renderPlanner()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-accent"></div>
+     </div>
+     <div id="plOut" class="space-y-2 text-xs"></div>
+    </div>
+    <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-4">
+     <h3 class="font-bold text-base text-white flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4 text-brand-blue"></i>Retake Simulator</h3>
+     <p class="text-xs text-gray-400">See how retaking a past course would change your CGPA.</p>
+     <div class="space-y-3 text-xs">
+      <div><label class="text-gray-400 block mb-1">Course to retake</label><select id="rtCourse" onchange="renderPlanner()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white focus:outline-none focus:border-brand-accent"></select></div>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-gray-400 block mb-1">Expected new grade</label><select id="rtNew" onchange="renderPlanner()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white"></select></div>
+       <div><label class="text-gray-400 block mb-1">Max grade allowed on retake</label><select id="rtCap" onchange="renderPlanner()" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-white"></select></div>
+      </div>
+     </div>
+     <div id="rtOut" class="space-y-2 text-xs"></div>
+     <p class="text-[10px] text-gray-500">Retake rules differ by university. This assumes the new grade replaces the old one only if it is higher. Check the max grade and eligibility rules with your registrar.</p>
+    </div>
+   </div>
+   <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-3">
+    <div class="flex items-center justify-between"><h3 class="font-bold text-base text-white flex items-center gap-2"><i data-lucide="history" class="w-4 h-4 text-brand-purple"></i>Semester History</h3><a href="{% url 'settings' %}" class="text-xs text-brand-accent hover:underline">Edit in Settings</a></div>
+    <div id="histList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+   </div>
+  </section>
+
+  <!-- CAREER -->
+  <section data-section="career" class="hidden space-y-6">
+   <div><h2 class="text-xl font-black text-white">Career Path Planner</h2><p class="text-xs text-gray-400">How your current CGPA aligns with industry targets</p></div>
+   <div id="careerList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- SCHOLARSHIPS -->
+  <section data-section="scholarships" class="hidden space-y-6">
+   <div><h2 class="text-xl font-black text-white">Scholarships & Grants</h2><p class="text-xs text-gray-400">Matched automatically against your CGPA</p></div>
+   <div id="grantList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+  </section>
+
+  <!-- PEERS -->
+  <section data-section="peers" class="hidden space-y-6">
+   <div><h2 class="text-xl font-black text-white">Peer Comparisons</h2><p class="text-xs text-gray-400">Where you stand among cohort benchmarks</p></div>
+   <div class="bg-brand-card p-5 rounded-2xl border border-brand-border overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-brand-dark text-gray-400 uppercase text-[10px] tracking-wider"><tr><th class="p-3 rounded-l-lg">#</th><th class="p-3">Student / Cohort</th><th class="p-3">Grade</th><th class="p-3">CGPA</th><th class="p-3">vs You</th><th class="p-3 rounded-r-lg text-right">Status</th></tr></thead><tbody id="peerBody" class="divide-y divide-brand-border/40 text-gray-300"></tbody></table></div>
+  </section>
+
+ </main>
+</div>
+{% include 'core/_footer.html' %}
+<div id="toast" class="fixed bottom-5 right-5 z-[60] hidden px-4 py-2.5 rounded-xl bg-brand-card border border-brand-accent/40 text-xs font-semibold text-white shadow-lg"></div>
+{{ gm_data|json_script:"gm-data" }}
+<script>const GM_USER="{{ user.username|escapejs }}";</script>
+<script src="{% static 'core/js/dashboard.js' %}"></script>
+<script src="{% static 'core/js/planner.js' %}"></script>
+<script src="{% static 'core/js/predictor.js' %}"></script>
+</body></html>

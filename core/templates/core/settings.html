@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}{% if onboarding %}Set up your profile{% else %}Academic settings{% endif %} - GradeWise{% endblock %}
+{% block content %}
+<main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 space-y-6">
+ <div>
+  <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">{% if onboarding %}Welcome, {{ user.username }}! Let's set up your profile{% else %}Academic settings{% endif %}</h1>
+  <p class="text-sm text-slate-400 mt-1">{% if onboarding %}Tell us where you are in your degree. This lets GradeWise calculate your real cumulative GPA on the 4.5 scale.{% else %}Update your program details or correct your previous semesters. Your dashboard recalculates automatically.{% endif %}</p>
+ </div>
+ <form method="post" id="settingsForm" class="space-y-6" novalidate>
+  {% csrf_token %}
+  {% if form.errors %}<div class="px-4 py-3 rounded-xl text-xs font-bold border bg-red-500/10 border-red-500/30 text-red-400 space-y-1">
+   {% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}
+   {% for f in form %}{% for e in f.errors %}<p>{{ f.label }}: {{ e }}</p>{% endfor %}{% endfor %}</div>{% endif %}
+
+  <section class="glass-card rounded-[1.75rem] p-6 space-y-4">
+   <h2 class="text-sm font-black uppercase tracking-wider text-slate-200"><i class="fa-solid fa-graduation-cap text-brand-text mr-2"></i>Your program</h2>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+    <div><label class="block text-slate-400 font-bold mb-1.5">Degree</label>{{ form.degree }}</div>
+    <div><label class="block text-slate-400 font-bold mb-1.5">Which semester are you in right now?</label>{{ form.current_semester }}</div>
+    <div><label class="block text-slate-400 font-bold mb-1.5">Your first semester started in</label>{{ form.start_term }}</div>
+    <div><label class="block text-slate-400 font-bold mb-1.5">Year of your first semester (optional)</label>{{ form.start_year }}</div>
+    <div><label class="block text-slate-400 font-bold mb-1.5">Credits required to graduate</label>{{ form.required_credits }}<p class="text-[10px] text-slate-500 mt-1">Check your degree requirements. Default is 120.</p></div>
+    <div><label class="block text-slate-400 font-bold mb-1.5">Target CGPA (4.5 scale)</label>{{ form.target_cgpa }}</div>
+   </div>
+   {{ form.history }}
+  </section>
+
+  <section class="space-y-4">
+   <div id="historyIntro"></div>
+   <div id="history" class="space-y-4"></div>
+   <div id="cumBox" class="hidden glass-card rounded-2xl p-5 flex items-center justify-between">
+    <div><p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cumulative GPA before this semester</p><p id="cumGpa" class="text-3xl font-black text-white">0.00</p></div>
+    <p id="cumCr" class="text-xs text-slate-400 text-right"></p>
+   </div>
+  </section>
+
+  <div class="flex flex-col sm:flex-row gap-3">
+   <button type="submit" class="btn btn-primary px-8 py-3.5 text-sm">{% if onboarding %}Save & open my dashboard{% else %}Save settings{% endif %}</button>
+   {% if not onboarding %}<a href="{% url 'home' %}" class="btn btn-secondary px-8 py-3.5 text-sm">Cancel</a>{% endif %}
+  </div>
+  <p id="clientError" class="hidden text-xs font-bold text-red-400"></p>
+ </form>
+</main>
+{{ sdata|json_script:"settings-data" }}
+{{ init|json_script:"settings-init" }}
+{% endblock %}
+{% block scripts %}<script src="{% static 'core/js/settings.js' %}"></script>{% endblock %}

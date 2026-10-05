@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="flex-1 grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+ <!-- Brand panel -->
+ <div class="hidden lg:flex brand-panel relative overflow-hidden flex-col justify-between p-12 xl:p-16">
+  <div class="absolute inset-0 grid-bg opacity-30 pointer-events-none" style="--ink:255 255 255"></div>
+  <div class="blob w-96 h-96 -right-24 top-1/4 bg-fuchsia-300"></div><div class="blob w-96 h-96 -left-24 -bottom-16 bg-sky-300" style="animation-delay:-8s"></div>
+  <a href="{% url 'home' %}" class="relative z-10 flex items-center gap-3"><img src="{% static 'core/img/logo.svg' %}" alt="" class="w-11 h-11 rounded-xl shadow-lg ring-1 ring-white/30"><span class="text-2xl font-extrabold tracking-tight on-brand">GradeWise</span></a>
+  <div class="relative z-10 space-y-9">
+   <h2 class="text-4xl xl:text-5xl font-extrabold leading-[1.1] tracking-tight on-brand">{% block hero %}{% endblock %}</h2>
+   <div class="space-y-3.5 max-w-md">
+    <div class="glass-on-brand rounded-2xl p-4 flex items-center gap-4 floaty"><div class="w-11 h-11 rounded-xl bg-white/20 on-brand flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></div><div><div class="text-sm font-bold on-brand">Track every semester</div><div class="text-xs on-brand-dim">Live GPA and CGPA on the 4.5 scale</div></div></div>
+    <div class="glass-on-brand rounded-2xl p-4 flex items-center gap-4 floaty ml-8" style="animation-delay:1.2s"><div class="w-11 h-11 rounded-xl bg-white/20 on-brand flex items-center justify-center"><i class="fa-solid fa-crown"></i></div><div><div class="text-sm font-bold on-brand">Path to honors</div><div class="text-xs on-brand-dim">Cum Laude, Magna and Summa progress</div></div></div>
+    <div class="glass-on-brand rounded-2xl p-4 flex items-center gap-4 floaty" style="animation-delay:2.4s"><div class="w-11 h-11 rounded-xl bg-white/20 on-brand flex items-center justify-center"><i class="fa-solid fa-bullseye"></i></div><div><div class="text-sm font-bold on-brand">Predict your grades</div><div class="text-xs on-brand-dim">Relative and absolute grading, attendance rules</div></div></div>
+   </div>
+  </div>
+  <p class="relative z-10 text-xs on-brand-dim">&copy; {% now "Y" %} GradeWise &middot; <a href="{% url 'about' %}" class="hover:underline">About Us</a> &middot; <a href="{% url 'contact' %}" class="hover:underline">Contact</a></p>
+ </div>
+ <!-- Form panel -->
+ <div class="relative flex items-center justify-center p-6 sm:p-10">
+  <div class="absolute top-5 right-5">{% include 'core/_themetoggle.html' %}</div>
+  <div class="w-full max-w-md space-y-7">
+   <a href="{% url 'home' %}" class="lg:hidden flex justify-center">{% include 'core/_logo.html' with size='w-10 h-10' %}</a>
+   <div class="glass-card rounded-[2rem] p-7 sm:p-9 space-y-6 shadow-lift">
+    {% block form_body %}{% endblock %}
+   </div>
+   <a href="{% url 'home' %}" class="block text-center text-xs font-bold text-slate-400 hover:text-ink transition"><i class="fa-solid fa-arrow-left mr-1"></i>Continue as guest</a>
+   <p class="lg:hidden text-center text-[11px] text-slate-500"><a href="{% url 'about' %}" class="hover:text-ink">About Us</a> &middot; <a href="{% url 'contact' %}" class="hover:text-ink">Contact</a></p>
+  </div>
+ </div>
+</div>
+{% endblock %}

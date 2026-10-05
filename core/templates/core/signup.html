@@ -1,0 +1,17 @@
+{% extends 'core/auth_base.html' %}
+{% block title %}Sign Up - GradeWise{% endblock %}
+{% block hero %}Start your <span class="text-[#fde68a]">academic journey.</span>{% endblock %}
+{% block form_body %}
+<div class="space-y-1"><h1 class="text-2xl font-extrabold tracking-tight text-ink">Create free account</h1><p class="text-xs text-slate-400">Save your GPAs and unlock full trajectory planning</p></div>
+<form method="post" class="space-y-4">{% csrf_token %}
+ <div><label class="block text-xs font-bold text-slate-300 mb-1.5">Username</label>{{ form.username }}{{ form.username.errors }}</div>
+ <div><label class="block text-xs font-bold text-slate-300 mb-1.5">Email Address</label>{{ form.email }}{{ form.email.errors }}</div>
+ <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div><label class="block text-xs font-bold text-slate-300 mb-1.5">Password</label>
+   <div class="relative">{{ form.password1 }}<button type="button" onclick="togglePw('{{ form.password1.id_for_label }}',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"><i class="fa-solid fa-eye"></i></button></div>{{ form.password1.errors }}</div>
+  <div><label class="block text-xs font-bold text-slate-300 mb-1.5">Confirm</label>{{ form.password2 }}{{ form.password2.errors }}</div>
+ </div>
+ <button type="submit" class="btn btn-primary w-full py-3.5 text-sm">Create Account</button>
+</form>
+<p class="text-center text-xs text-slate-400">Already have an account? <a href="{% url 'login' %}" class="font-black text-brand-text hover:underline">Log in</a></p>
+{% endblock %}
